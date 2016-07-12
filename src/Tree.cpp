@@ -80,7 +80,8 @@ Tree& Tree::Insert(const int& p, const int& e){
 
 	//pointers[i] is now the leaf,now we go backwards
 	//doing rotations while the tree is not max tree
-	while(pointers[i-1]->pi < pointers[i-1]->left->pi || pointers[i-1]->pi < pointers[i-1]->right->pi){
+	while( pointers[i-1]->left!=0? pointers[i-1]->pi < pointers[i-1]->left->pi : false ||
+		pointers[i-1]->right!=0? pointers[i-1]->pi < pointers[i-1]->right->pi : false) {
 		if (pointers[i]->ei < pointers[i-1]->ei) { //if node is left child
 			i--;
 			rotateRight(pointers[i], pointers[i-1]);
