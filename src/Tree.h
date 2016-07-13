@@ -15,19 +15,20 @@ class Tree {
 		Tree();
 		~Tree();
 		bool IsEmpty();
-		Tree& rotateRight(TreeNode *&p);
-		Tree& rotateLeft(TreeNode *&p);
 		Tree& Insert(const int& p, const int& e);
 		Tree& Delete(const int& p, const int& e);
 
 		int Find_second_next(int x);
-		void Print_Between(int k1,int k2);
+		void Print_Between(int k1, int k2);
 		void Print_with_higher_priority(int x);
 
 	private:
 		TreeNode* root;
-		void Find_second_next_InOrder(TreeNode *p,const int& x, int& i,int& y);
-		void Print_between_InOrder(TreeNode *p,int k1,int k2);
+		Tree& rotateRight(TreeNode *&p);
+		Tree& rotateLeft(TreeNode *&p);
+		void Find_second_next_InOrder(TreeNode *p,const int& x, int& i, int& y);
+		void Print_between_InOrder(TreeNode *p, int k1,int k2);
+		void Print_with_higher_priority_PreOrder(TreeNode *p, int x);
 };
 
 #endif /* TREE_H_ */

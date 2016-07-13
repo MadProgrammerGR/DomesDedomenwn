@@ -138,14 +138,16 @@ Tree& Tree::Delete(const int& p, const int& e){
 }
 
 int Tree::Find_second_next(int x){
-	int temp = 0;
-	//do inorder starting from root untill 2 items after x
-	int y = 0;
-	Find_second_next_InOrder(root, x, temp, y);
-	return y;
+	if (!IsEmpty()){
+		int temp = 0;
+		//do inorder starting from root untill 2 items after x
+		int y = 0;
+		Find_second_next_InOrder(root, x, temp, y);
+		return y;
+	}else throw "Tree is Empty";
 }
 //returns value at y
-void Tree::Find_second_next_InOrder(TreeNode *p,const int& x, int& i,int& y){
+void Tree::Find_second_next_InOrder(TreeNode *p,const int& x, int& i, int& y){
 	if(p!=0){
 		Find_second_next_InOrder(p->left,x,i,y);
 		if (i==0){
@@ -162,35 +164,44 @@ void Tree::Find_second_next_InOrder(TreeNode *p,const int& x, int& i,int& y){
 	}
 }
 
-void Tree::Print_Between(int k1,int k2){
-	cout << "Printing elements in [" << k1 << "," << k2 << "]:" << endl;
-	Print_between_InOrder(root,k1,k2); //do inorder and print elements between k1,k2
+void Tree::Print_Between(int k1, int k2){
+	if(!IsEmpty()){
+		//searching on binary tree for the first element between k1,k2
+		TreeNode *current = root;
+		while (current->ei < k1 || current->ei > k2){ //while is outside [k1,k2]
+			if(k1 < current->ei) current = current->left;
+			else current = current->right;
+		}
+		cout << "Printing ei elements in [" << k1 << "," << k2 << "]:" << endl;
+		Print_between_InOrder(current,k1,k2); //do inorder on current's subtree and print elements between k1,k2
+	}else cout << "Tree is empty";
 }
-void Tree::Print_between_InOrder(TreeNode *p,int k1,int k2){
+void Tree::Print_between_InOrder(TreeNode *p, int k1, int k2){
 	if (p!=0){
 		Print_between_InOrder(p->left,k1,k2);
 		if(p->ei >= k1 && p->ei <= k2)
 			cout << p->ei << endl;
+		else if (p->ei > k2){ //if current ei is bigger than k2, no need to travel more
+			return;
+		}
 		Print_between_InOrder(p->right,k1,k2);
 	}
 }
 
 void Tree::Print_with_higher_priority(int x){
-
+	if (!IsEmpty()){
+		cout << "Printing pi elements bigger than " << x << endl;
+		Print_with_higher_priority_PreOrder(root,x); //travel through all pi elements
+	}else cout << "Tree is empty";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void Tree::Print_with_higher_priority_PreOrder(TreeNode *p, int x){
+	if(p!=0){
+		if(p->pi > x){
+			cout << p->pi << endl;
+		}else{ //if current pi is less than x, no need to go on subtrees so skip them
+			return;
+		}
+		Print_with_higher_priority_PreOrder(p->left, x);
+		Print_with_higher_priority_PreOrder(p->right, x);
+	}
+}
