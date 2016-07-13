@@ -1,10 +1,3 @@
-/*
- * Tree.h
- *
- *  Created on: 12 Ιουλ 2016
- *      Author: Souvlakomanis
- */
-
 #ifndef TREE_H_
 #define TREE_H_
 #include "TreeNode.h"
@@ -24,8 +17,9 @@ class Tree {
 
 	private:
 		TreeNode* root;
-		Tree& rotateRight(TreeNode *&p);
-		Tree& rotateLeft(TreeNode *&p);
+		void Insert_Travel(TreeNode *&current, int p, int e);
+		void rotateRight(TreeNode *&p);
+		void rotateLeft(TreeNode *&p);
 		void Find_second_next_InOrder(TreeNode *p,const int& x, int& i, int& y);
 		void Print_between_InOrder(TreeNode *p, int k1,int k2);
 		void Print_with_higher_priority_PreOrder(TreeNode *p, int x);

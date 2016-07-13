@@ -2,7 +2,6 @@
 #include <iostream>
 using namespace std;
 
-
 int main() {
 	Tree tree;
 	tree.Insert(10,9);

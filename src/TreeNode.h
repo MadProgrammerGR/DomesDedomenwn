@@ -1,10 +1,3 @@
-/*
- * TreeNode.h
- *
- *  Created on: 12 Ιουλ 2016
- *      Author: Souvlakomanis
- */
-
 #ifndef TREENODE_H_
 #define TREENODE_H_
 #include "Tree.h"
@@ -15,11 +8,11 @@ friend class Tree;
 		TreeNode();
 		TreeNode(const int& p, const int& e);
 		TreeNode(const int& p, const int& e, TreeNode *l, TreeNode *r);
-	private:
-		int pi;
 		int ei;
+		int pi;
 		TreeNode *left; //aristero paidi
 		TreeNode *right; //de3i paidi
+	private:
 };
 
 #endif /* TREENODE_H_ */

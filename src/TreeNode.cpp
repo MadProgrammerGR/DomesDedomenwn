@@ -1,10 +1,3 @@
-/*
- * TreeNode.cpp
- *
- *  Created on: 12 Ιουλ 2016
- *      Author: Souvlakomanis
- */
-
 #include "TreeNode.h"
 
 TreeNode::TreeNode() {

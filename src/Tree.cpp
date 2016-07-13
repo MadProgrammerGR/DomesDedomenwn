@@ -1,10 +1,3 @@
-/*
- * Tree.cpp
- *
- *  Created on: 12 Ιουλ 2016
- *      Author: Souvlakomanis
- */
-
 #include "Tree.h"
 #include "TreeNode.h"
 #include <iostream>
@@ -21,85 +14,55 @@ bool Tree::IsEmpty(){
 }
 
 //rotates right and return tree
-Tree& Tree::rotateRight(TreeNode *&p){
+void Tree::rotateRight(TreeNode *&p){
 	TreeNode *temp = p;
 	p = p->left;
 	temp->left = p->right;
 	p->right = temp;
-	return *this;
 }
 
 //rotates right and return tree
-Tree& Tree::rotateLeft(TreeNode *&p){
+void Tree::rotateLeft(TreeNode *&p){
 	TreeNode *temp = p;
 	p = p->right;
 	temp->right = p->left;
 	p->left = temp;
-	return *this;
 }
 
 Tree& Tree::Insert(const int& p, const int& e){
-	const int MAXHEIGHT = 30; //max height of inserted node=30
-	TreeNode *pointers[MAXHEIGHT]; //an array of treenode pointers (will be used to go up)
-	pointers[0] = root;
-
-	int i = 0;
-	//pointers[i] will point to right place(according to ei as BST) for new node
-	while(pointers[i]!=0){
-		if (e < pointers[i]->ei) //move to left or right child?
-			pointers[i+1] = pointers[i]->left;
-		else if ( e > pointers[i]->ei)
-			pointers[i+1] = pointers[i]->right;
-		else throw "Bad Input! Already exists.";
-		i++;
-	}//pointers[i] points to null,pointers[i-1] to leaf
-
-	TreeNode *node = new TreeNode(p,e);  //make new node to be inserted with given values and insert it as last treenode
-	if (!IsEmpty()) {
-		if (e < pointers[i-1]->ei) {
-			pointers[i-1]->left = node;
-			pointers[i] = node;
-		}
-		else {
-			pointers[i-1]->right = node;
-			pointers[i] = node;
-		}
-	}else{ //if its empty,insert it as root and return
+	if(!IsEmpty()) Insert_Travel(root, p, e);
+	else{
+		TreeNode *node = new TreeNode(p,e);
 		root = node;
-		return *this;
 	}
-	//pointers[i] is now the leaf,now we go backwards
-	//doing rotations while the tree is not max tree
-	/*
-	while( i!=0 &&(
-		(pointers[i-1]->left!=0 ? (pointers[i-1]->pi < pointers[i-1]->left->pi) : false) ||
-		(pointers[i-1]->right!=0 ? (pointers[i-1]->pi < pointers[i-1]->right->pi) : false))) {
-		if (pointers[i]->ei < pointers[i-1]->ei) { //if node is left child
-			i--;
-			//rotateRight(pointers[i]);
-			TreeNode *temp = pointers[i];
-			pointers[i] = pointers[i]->left;
-			temp->left = pointers[i]->right;
-			pointers[i]->right = temp;
-		}else{
-			i--;
-			//rotateLeft(pointers[i]);
-			TreeNode *temp;
-			temp = pointers[i];
-			pointers[i] = pointers[i]->right;
-			temp->right = pointers[i]->left;
-			pointers[i]->left = temp;
-
-			if (i!=0) {
-				if(pointers[i] == pointers[i-1]->left) pointers[i-1]->left =pointers[i];
-				else pointers[i-1]->right =pointers[i];
+	return *this;
+}
+void Tree::Insert_Travel(TreeNode *&current, int p, int e){
+	if (current!=0){
+		if(e < current->ei){
+			if(current->left !=0){
+				Insert_Travel(current->left, p, e);
+				if(current->pi < p) rotateRight(current);
+			}else{
+				TreeNode *node = new TreeNode(p,e);
+				current->left = node;
+				if(current->pi < p) rotateRight(current);
 			}
+		}else if(e > current->ei){
+			if(current->right !=0){
+				Insert_Travel(current->right, p, e);
+				if(current->pi < current->right->pi) rotateLeft(current);
+			}else{
+				TreeNode *node = new TreeNode(p,e);
+				current->right = node;
+				if(current->pi < p) rotateLeft(current);
+			}
+		}else{
+			throw "Already exists";
 		}
 	}
-	root = pointers[0];
-	return *this;
-	*/
 }
+
 
 Tree& Tree::Delete(const int& p, const int& e){
 	TreeNode *current = root;
