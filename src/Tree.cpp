@@ -62,38 +62,63 @@ void Tree::Insert_Travel(TreeNode *&current, int p, int e){
 }
 
 Tree& Tree::Delete(const int& p, const int& e){
-	TreeNode *current = root; //current ειναι ο κομβος που διασχιζουμε μεχρι να φτασουμε στον κομβο που θελουμε να διαγραψουμε
-	TreeNode *pcurrent = 0; //pcurrent ειναι ο πατερας του current
-	TreeNode *temp; //προσωρινος κομβος
-	while(current!=0 && (current->ei!=e || current->pi!=p)){//αν current!=0, σημαινει οτι δεν βρεθηκε το στοιχειο. Αν current->ei!=e || current->pi!=p, τοτε ο κομβος που πρεπει να διαγραψουμε βρεθηκε
-		if(e<current->ei){
-			pcurrent = current;
-			current = current->left; //πηγαινε στο αριστερο παιδι
-		}else if(e>current->ei){
-			pcurrent = current;
-			current = current->right; // πηγαινε στο δεξι παιδι
-		}
+	TreeNode *current = root;
+	TreeNode *parent = 0;
+	//current will point to the element we want to delete
+	while(current!=0 && ((current->pi !=p)||(current->ei != e))){
+		parent = current;
+		if(e < current->ei) current = current->left;
+		else current = current->right;
 	}
-	if (current==0) throw("To stoixeio afto den yparxei"); //δεν υπαρχει το στοιχειο
-	while(current->left!=0 && current->right!=0){ //ο κομβος που πρεπει να διαγραφει,υποβιβαζεται συνεχως στο δεντρο με περιστροφες, μεχρι να γινει φυλλο
-		if((current->left)->pi > (current->right)->pi){ //η προτεραιοτητα του αριστερου κομβου μεγαλυτερη απο την προτεραιοτητα του δεξιου κομβου
-			temp = current->left; //αποθηκευουμε το παιδι με τον οποιο πρεπει να γινει η περιστροφη με το current
-			rotateRight(current);
-			pcurrent->left = temp; //ενωνουμε τον πρωην γονεα του current με το temp
-			pcurrent = temp; // ο current εχει πλεον νεο γονεα
-		}
-		else{ //η προτεραιοτητα του δεξιου κομβου μεγαλυτερη απο την προτεραιοτητα του αριστερου κομβου
-			temp = current->right;
-			rotateLeft(current);
-			pcurrent->right = temp;
-			pcurrent = temp;
+	if (current == 0) throw "Not Found";
+
+	while(current->right!=0 && current->left!=0){//untill current is node with 0 or 1 childs
+		if(current->left->pi > current->right->pi){  //check for bigger
+			//rotate right (using parent)
+			if(current == parent->left){
+				parent->left = current->left;
+				current->left = current->left->right;
+				parent->left->right = current;
+
+				parent = parent->left;
+			}else{
+				parent->right = current->left;
+				current->left = current->left->right;
+				parent->right->right = current;
+
+				parent = parent->right;
 			}
+		}else{
+			//rotate left (using parent)
+			if(current == parent->left){
+				parent->left = current->right;
+				current->right = current->right->left;
+				parent->left->left = current;
+
+				parent = parent->left;
+			}else{
+				parent->right = current->right;
+				current->right = current->right->left;
+				parent->right->left = current;
+
+				parent = parent->right;
+			}
+		}
 	}
-	delete current; //ο κομβος πλεον εγινε φυλλο. Τωρα μπορουμε να τον διαγραψουμε ευκολα
+
+	TreeNode *child; //child of current
+	if(current->left!=0) child = current->left;
+	else child = current->right;
+
+	//"skip" current
+	if (current == root) root = child;
+	else {
+		if (current == parent->left) parent->left = child;
+		else parent->right = child;
+	}
+	delete current;
 	return *this;
 }
-
-
 
 int Tree::Find_second_next(int x){
 	if (!IsEmpty()){
@@ -163,54 +188,3 @@ void Tree::Print_with_higher_priority_PreOrder(TreeNode *p, int x){
 		Print_with_higher_priority_PreOrder(p->right, x);
 	}
 }
-
-
-
-
-/*Tree& Tree::Delete(const int& p, const int& e){
-	TreeNode *current = root;
-	TreeNode *parent = 0;
-	//current will point to the element we want to delete
-	while(current!=0 && ((current->pi !=p)||(current->ei != e))){
-		parent = current;
-		if(e < current->ei) current = current->left;
-		else current = current->right;
-	}
-	if (current == 0) throw "Not Found";
-
-	TreeNode *temp;
-	while(current->right!=0 && current->left!=0){//untill current is node with 0 or 1 childs
-		parent = current;
-		//if the bigger is the left child,rotateRight
-		if(current->left->pi > current->right->pi){
-			//rotateRight(current);
-			temp = current;
-			current = current->left;
-			temp->left = current->right;
-			current->right = temp;
-
-			current = current->right;
-		}else{
-			//rotateLeft(current);
-			temp = current;
-			current = current->right;
-			temp->right = current->left;
-			current->left = temp;
-
-			current = current->left;
-		}
-	}
-
-	TreeNode *child; //child of current
-	if(current->left!=0) child = current->left;
-	else child = current->right;
-
-	//"skip" current
-	if (current == root) root = child;
-	else {
-		if (current == parent->left) parent->left = child;
-		else parent->right = child;
-	}
-	delete current;
-	return *this;
-} */
